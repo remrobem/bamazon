@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/remrobem/bamazon#readme",
   "dependencies": {
+    "cli-box": "^6.0.8",
+    "cli-table": "^0.3.1",
     "inquirer": "^5.2.0",
     "mysql": "^2.15.0"
   }
