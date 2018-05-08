@@ -16,61 +16,27 @@ var connection = mysql.createConnection({
 
 connection.connect(function (err) {
     if (err) throw err;
-    processRequest();
+    placeOrder();
 });
 
 
-// function main() {
-//     return new Promise( resolve => processRequest());
-// }
-// async function asyncCall() {
-//     let wait = await main();
-//     connectionEnd();
-// }
-
-// asyncCall();
-
-// function connectionEnd() {
-//     connection.end();
-// }
-
-function processRequest() {
-    inquirer
-        .prompt({
-            name: "action",
-            type: "list",
-            message: "What activity would you like to perform?",
-            choices: [
-                "Place an order",
-                "Nothing",
-                "test"
-            ]
-        })
-        .then(function (answer) {
-            switch (answer.action) {
-                case "Place an order":
-                    placeOrder();
-                    break;
-                case "Nothing":
-                    connection.end();
-                    break;
-
-                case "test":
-                    test();
-                    break;
-
-                default:
-                    throw new Error("Unknown activity");
-            }
-        });
-}
+const anotherOrderQuestion = [{
+    name: "anotherOrder",
+    type: "confirm",
+    message: "Would you like to place an order for another product? (hit Enter for Yes)",
+    default: true
+}];
 
 function placeOrder() {
 
-
-    // select using as so the array returned can be used in choices for inquirer
-    let productList = [];
-    let query = "SELECT item_id as value, product_name as name FROM products ORDER BY item_id";
+    // inquirer uses an object of value:name. name is display and the value is retrune when selected. 
+    // The query returns the item_id as value and the concatenated item_id and product_name as the name. 
+    // Doing this allows a product list to be created directly from the query results
+    const productList = [{
+        value: 'exit',
+        name: 'exit'
+    }];
+    const query = "SELECT item_id as value, CONCAT(item_id, ' : ', product_name) as name FROM products ORDER BY item_id";
 
     connection.query(query, {}, function (err, res) {
         if (err) throw err;
@@ -92,16 +58,19 @@ function placeOrder() {
                         name: "stock_quantity",
                         type: "input",
                         message: "How many would you like to order?",
-                        validate: ValidateNumeric
+                        validate: ValidateNumeric,
+                        when: function (answers) {
+                            return answers.item_id != 'exit';
+                        }
                     }
+
                 ])
                 .then(function (answer) {
-                    // console.log(answer);
-                    // let query = "SELECT stock_quantity, price FROM products WHERE ?";
-                    // connection.query(query, {
-                    //     item_id: answer.item_id
-                    // }, function (err, res) {
-
+                    if (answer.item_id === 'exit') {
+                        connection.end();
+                        return;
+                    }
+                    // select stock and price data for the selected item
                     let query = "SELECT stock_quantity, price FROM products WHERE item_id = ?";
                     connection.query(query, [answer.item_id], function (err, res) {
                         if (err) throw err;
@@ -110,28 +79,30 @@ function placeOrder() {
                             unitPrice = res[0].price;
                             orderQty = answer.stock_quantity;
                             stockQty = res[0].stock_quantity;
-
+                            // make sure there is inventory to fill the request
                             if (orderQty <= stockQty) {
-                                console.log('Great, we have enough inventory. Placing yur order now.');
-
+                                console.log('Great, we have enough inventory. Placing your order now.');
 
                                 // reduce inventory by the amount ordered and tell the customer the total cost
-                                let newQty = stockQty - orderQty;
-                                let totalPrice = orderQty * unitPrice;
+                                newQty = stockQty - orderQty;
+                                totalPrice = parseFloat(orderQty * unitPrice).toFixed(2);
 
                                 let query = "UPDATE products SET stock_quantity = ? WHERE item_id = ?";
                                 connection.query(query, [newQty, answer.item_id], function (err, res) {
                                     if (err) throw err;
+                                    // expect one row to be updated
                                     if (res.affected_rows = 1) {
                                         console.log(`The total price is ${totalPrice}`)
                                     } else {
                                         console.log(`Something went wrong. Rows updated: ${res.affected_rows}`)
                                     }
+                                    anotherOrder();
                                 });
-
+                                // if not enogh inventory, let the user know and end
                             } else {
                                 console.log(`Sorry, we don't have enough inventory.`);
-                                console.log(`You ordered ${answer.stock_quantity} and we only have ${res[0].stock_quantity}`);
+                                console.log(`You ordered ${answer.stock_quantity} and we have ${res[0].stock_quantity}`);
+                                anotherOrder();
                             }
                         };
                     });
@@ -139,44 +110,25 @@ function placeOrder() {
 
         } else {
             console.log("Sorry, something went wrong. We could not find any products.");
+            connection.end();
         };
     });
 
 }
 
+
+function anotherOrder() {
+    inquirer.prompt(anotherOrderQuestion).then(answers => {
+
+        if (answers.anotherOrder) {
+            placeOrder();
+        } else {
+            console.log('Thank you for visiting');
+            connection.end();
+        }
+    });
+}
+
 function ValidateNumeric(value) {
     return !isNaN(value)
 };
-
-function test() {
-    var choices = Array.apply(0, new Array(26)).map((x, y) => String.fromCharCode(y + 65));
-    choices.push('Multiline option \n  super cool feature');
-    choices.push({
-        name: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.',
-        value: 'foo',
-        short: 'The long option'
-    });
-
-    inquirer
-        .prompt([{
-                type: 'list',
-                name: 'letter',
-                message: "What's your favorite letter?",
-                paginated: true,
-                choices: choices
-            },
-            {
-                type: 'checkbox',
-                name: 'name',
-                message: 'Select the letter contained in your name:',
-                paginated: true,
-                choices: choices
-            }
-        ])
-        .then(answers => {
-            console.log(JSON.stringify(answers, null, '  '));
-        });
-
-
-
-}
