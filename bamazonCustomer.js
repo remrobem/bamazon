@@ -16,7 +16,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function (err) {
     if (err) throw err;
-    processRequest();   
+    processRequest();
 });
 
 
@@ -62,7 +62,7 @@ function processRequest() {
                 default:
                     throw new Error("Unknown activity");
             }
-        });     
+        });
 }
 
 function placeOrder() {
@@ -97,37 +97,43 @@ function placeOrder() {
                 ])
                 .then(function (answer) {
                     // console.log(answer);
-                    let query = "SELECT stock_quantity, price FROM products WHERE ?";
-                    connection.query(query, {
-                        item_id: answer.item_id
-                    }, function (err, res) {
+                    // let query = "SELECT stock_quantity, price FROM products WHERE ?";
+                    // connection.query(query, {
+                    //     item_id: answer.item_id
+                    // }, function (err, res) {
+
+                    let query = "SELECT stock_quantity, price FROM products WHERE item_id = ?";
+                    connection.query(query, [answer.item_id], function (err, res) {
                         if (err) throw err;
                         if (res.length) {
+
                             unitPrice = res[0].price;
                             orderQty = answer.stock_quantity;
                             stockQty = res[0].stock_quantity;
+
                             if (orderQty <= stockQty) {
-                                console.log('Great, we have enough inventory');
+                                console.log('Great, we have enough inventory. Placing yur order now.');
 
 
-                                // reduce inventory by the amount orders and tell the customer the total cost
+                                // reduce inventory by the amount ordered and tell the customer the total cost
                                 let newQty = stockQty - orderQty;
                                 let totalPrice = orderQty * unitPrice;
 
                                 let query = "UPDATE products SET stock_quantity = ? WHERE item_id = ?";
                                 connection.query(query, [newQty, answer.item_id], function (err, res) {
                                     if (err) throw err;
-                                    if (res.affected_rows = 1) {                                       
+                                    if (res.affected_rows = 1) {
                                         console.log(`The total price is ${totalPrice}`)
                                     } else {
                                         console.log(`Something went wrong. Rows updated: ${res.affected_rows}`)
                                     }
                                 });
-                            };
-                        } else {
-                            console.log(`Sorry, we don't have enough inventory.`);
-                            console.log(`You ordered ${answer.stock_quantity} and we only have ${res[0].stock_quantity}`);
-                        }
+
+                            } else {
+                                console.log(`Sorry, we don't have enough inventory.`);
+                                console.log(`You ordered ${answer.stock_quantity} and we only have ${res[0].stock_quantity}`);
+                            }
+                        };
                     });
                 });
 
@@ -135,7 +141,7 @@ function placeOrder() {
             console.log("Sorry, something went wrong. We could not find any products.");
         };
     });
-    
+
 }
 
 function ValidateNumeric(value) {
