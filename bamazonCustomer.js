@@ -23,7 +23,7 @@ connection.connect(function (err) {
 const anotherOrderQuestion = [{
     name: "anotherOrder",
     type: "confirm",
-    message: "Would you like to place an order for another product?",
+    message: "Would you like to place an order for another product? (hit Enter for Yes)",
     default: true
 }];
 
