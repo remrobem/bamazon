@@ -76,7 +76,7 @@ function viewSales() {
 
         if (res.length) {
             res.forEach(prodDept => {
-             
+
                 if (!prodDept.sales) {
                     prodDept.sales = parseFloat(0);
                     prodDept.profit = parseFloat(prodDept.sales - prodDept.dept_overhead).toFixed(2);
@@ -114,7 +114,7 @@ function addDepartment() {
             message: "Enter Department Overhead Cost:",
             validate: ValidatePositive,
         }
-       
+
     ];
 
     inquirer.prompt(addProduct)
@@ -122,13 +122,20 @@ function addDepartment() {
             query = "INSERT INTO departments (department_name, over_head_costs) values( ? , ? ) ";
             answer.addDeptOverhead = parseFloat(answer.addDeptOverhead).toFixed(2);
             connection.query(query, [answer.addDeptName, answer.addDeptOverhead], function (err, res) {
-                if (err) throw err;
-                // expect one row to be added
-                if (res.affectedRows === 1) {
-                    console.log(`Your department has been added and assigned item id ${res.insertId}`)
+                if (err) {
+                    if (err.code === "ER_DUP_ENTRY") {
+                        console.log(`Department ${answer.addDeptName} already exists. Please try again with a unique department name`)
+                    } else {
+                        throw err;
+                    };
                 } else {
-                    console.log(`Something went wrong. Rows updated: ${res.affected_rows}`)
-                }
+                    // expect one row to be added
+                    if (res.affectedRows === 1) {
+                        console.log(`Your department has been added and assigned item id ${res.insertId}`)
+                    } else {
+                        console.log(`Something went wrong. Rows updated: ${res.affected_rows}`)
+                    }
+                };
                 anotherActivity()
             });
         });
