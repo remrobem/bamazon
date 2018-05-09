@@ -1,6 +1,6 @@
 # Application
 
-##bamazon
+## bamazon
 
 # Description
 
@@ -24,7 +24,7 @@ There are 3 js files that can be run from a terminal session. Details on executi
     1. Add Inventory to a Product
     1. Add a Product
 1. **_node bamazonSupevisor.js_**
-    1. View Poduct sales by Department
+    1. View Product sales by Department
     1. Add a Department
 
 # General Instructions
@@ -46,8 +46,20 @@ There are 3 js files that can be run from a terminal session. Details on executi
 # bamazonManager.js
 
 1. run _node bamazonManager.js_ from a terminal session in the application directory
-1. Four options are presented.
-1. Use the up/down arrow keys to navigate thru the options
+1. Four options are presented
+1. **View products**
+    1. A list of all products and details is presented
+1. **View products with low inventory**
+    1. Reply to the prompt with a quantity value
+    1. A list is presented of all products with a stock quantity less than the quantity requested
+1. **Add Inventory to a Product**
+    1. Rely to the prompts to provide a product item number and the additional inventory
+    1. The product item number must be valid
+1. **Add a Product**
+    1. Rely to the prompts with the requested product information
+    1. A product item number is automatically generated
+    1. Product name must be unique
+
 
 # bamazonSupevisor.js
 
