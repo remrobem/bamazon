@@ -95,7 +95,7 @@ function viewInventory() {
         name: "lowInventoryQuantity",
         type: "prompt",
         message: "Show products with a stock quantity less than:",
-        validate: VValidatePositive,
+        validate: ValidatePositive,
     }];
 
 
@@ -189,13 +189,20 @@ function addProduct() {
         .then(answer => {
             query = "INSERT INTO products (product_name, department_name, price, stock_quantity) values( ? , ? , ? , ?) ";
             connection.query(query, [answer.addProductName, answer.addProductDept, answer.addProductPrice, answer.addProductQuantity], function (err, res) {
-                if (err) throw err;
-                // expect one row to be added
-                if (res.affectedRows === 1) {
-                    console.log(`Your product has been added and assigned item id ${res.insertId}`)
+                if (err) {
+                    if (err.code === "ER_DUP_ENTRY") {
+                        console.log(`Product ${answer.addProductName} already exists. Please try again with a unique product name`)
+                    } else {
+                        throw err;
+                    };
                 } else {
-                    console.log(`Something went wrong. Rows updated: ${res.affected_rows}`)
-                }
+                    // expect one row to be added
+                    if (res.affectedRows === 1) {
+                        console.log(`Your product has been added and assigned item id ${res.insertId}`)
+                    } else {
+                        console.log(`Something went wrong. Rows updated: ${res.affected_rows}`)
+                    }
+                };
                 anotherActivity()
             });
         });
