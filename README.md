@@ -10,6 +10,7 @@ This is a node application to maintain a product and department information and 
 
 1. Install node.js if you do not have it installed already (https://nodejs.org/en/download/)
 1. Clone repository bamamzon from https://github.com/remrobem/bamazon
+1. Open a terminal session for the directory where the application was cloned to
 1. run *npm install* to install the dependancies
 
 # Use
@@ -61,6 +62,13 @@ There are 3 js files that can be run from a terminal session. Details on executi
     1. Product name must be unique
 
 
-# bamazonSupevisor.js
+# bamazonSupervisor.js
 
 1. run _node bamazonSupevisor.js_ from a terminal session in the application directory
+1. Two options are presented
+1. **View Product sales by Department**
+    1. A list of product sales and profits for each department is presented
+1. **Add a Department**
+    1. Rely to the prompts with the requested department information
+    1. A department item number is automatically generated
+    1. Department name must be unique

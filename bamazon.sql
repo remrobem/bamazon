@@ -24,7 +24,7 @@ CREATE TABLE products (
 
 CREATE TABLE departments (
   department_id integer(10) not null auto_increment,
-  department_name VARCHAR(100) NOT NULL,
+  department_name VARCHAR(100) NOT NULL UNIQUE,
   over_head_costs integer(10)  NOT NULL,
 PRIMARY KEY(department_id)
 );
