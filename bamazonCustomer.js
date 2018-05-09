@@ -6,10 +6,7 @@ let mysql = require('mysql');
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
-
-    // Your username
-    user: "bamazon_user",
-    // Your password
+    user: "bamazon_customer",
     password: "BCtest1234!",
     database: "bamazon"
 });

@@ -95,7 +95,7 @@ function viewInventory() {
         name: "lowInventoryQuantity",
         type: "prompt",
         message: "Show products with a stock quantity less than:",
-        validate: VValidatePositive,
+        validate: ValidatePositive,
     }];
 
 

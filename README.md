@@ -4,7 +4,10 @@
 
 ## Description
 
-This is a node application to maintain a product and department information and allow customer to place orders for products
+This is a node application to:
+* view and maintain product and department information
+* view and maintain product and department information
+* allow customer to place orders for products
 
 ## Requirements
 
@@ -17,7 +20,9 @@ This is a node application to maintain a product and department information and 
 1. Clone repository bamamzon from https://github.com/remrobem/bamazon
 1. Open a terminal session for the directory where the application was cloned to
 1. run *npm install* to install the dependancies
-1. Use the *bamazaon.sql* file to create the databases in MySQL and *bamazon_seed.sql* to create an initial set of data
+1. Use the *bamazaon.sql* file to create the databases in MySQL
+1. Use the *bamazon_seed.sql* to create an initial set of data in MySQL
+1. Use the *user_privileges.sql* file to create the users used by the application to connect to the MySQL database
 
 ## Use
 
