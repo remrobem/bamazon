@@ -9,9 +9,8 @@ This is a node application to maintain a product and department information and 
 # Requirements
 
 1. Node.js must be installed (https://nodejs.org/en/download/)
-1. MySQL must be installed, at a minimum the free Community Edition must be present (https://www.mysql.com/downloads/) 
+1. MySQL must be installed. At a minimum, the free Community Edition must be present (https://www.mysql.com/downloads/) 
 1. A MySQL developer tool such as MySQL Workbench or Sequel Pro (https://www.sequelpro.com/) is needed to create and seed the database
-
 
 # Installation
 
@@ -24,9 +23,9 @@ This is a node application to maintain a product and department information and 
 
 There are 3 js files that can be run from a terminal session. Details on executing each of these is found in sections below.
 
-1. **_node bamazonCustomer.js_**
+1. `node bamazonCustomer.js`
     1. Create an order
-1. **_node bamazonManager.js_**
+1. `**_node bamazonManager.js_**`
     1. View products
     1. View products with low inventory
     1. Add Inventory to a Product
