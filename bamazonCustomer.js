@@ -84,11 +84,12 @@ function placeOrder() {
                                 console.log('Great, we have enough inventory. Placing your order now.');
 
                                 // reduce inventory by the amount ordered and tell the customer the total cost
-                                newQty = stockQty - orderQty;
+                                // newQty = stockQty - orderQty;
                                 totalPrice = parseFloat(orderQty * unitPrice).toFixed(2);
 
-                                let query = "UPDATE products SET stock_quantity = ? WHERE item_id = ?";
-                                connection.query(query, [newQty, answer.item_id], function (err, res) {
+                                let query = "UPDATE products SET stock_quantity = stock_quantity - ?, product_sales = product_sales + ? WHERE item_id = ?";
+
+                                connection.query(query, [orderQty, totalPrice, answer.item_id], function (err, res) {
                                     if (err) throw err;
                                     // expect one row to be updated
                                     if (res.affected_rows = 1) {
@@ -96,7 +97,9 @@ function placeOrder() {
                                     } else {
                                         console.log(`Something went wrong. Rows updated: ${res.affected_rows}`)
                                     }
+
                                     anotherOrder();
+
                                 });
                                 // if not enogh inventory, let the user know and end
                             } else {
