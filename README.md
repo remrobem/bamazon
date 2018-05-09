@@ -6,12 +6,19 @@
 
 This is a node application to maintain a product and department information and allow customer to place orders for products
 
+# Requirements
+
+1. Node.js must be installed (https://nodejs.org/en/download/)
+1. MySQL must be installed, at a minimum the free Community Edition must be present (https://www.mysql.com/downloads/) 
+1. A MySQL developer tool such as MySQL Workbench or Sequel Pro (https://www.sequelpro.com/) is needed to create and seed the database
+
+
 # Installation
 
-1. Install node.js if you do not have it installed already (https://nodejs.org/en/download/)
 1. Clone repository bamamzon from https://github.com/remrobem/bamazon
 1. Open a terminal session for the directory where the application was cloned to
 1. run *npm install* to install the dependancies
+1. Use the *bamazaon.sql* file to create the databases in MySQL and *bamazon_seed.sql* to create an initial set of data
 
 # Use
 
