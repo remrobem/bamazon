@@ -75,15 +75,19 @@ There are 3 js files that can be run from a terminal session. Details on executi
     1. Product name must be unique
 
 **View products**
+
 ![Demo](https://user-images.githubusercontent.com/11021578/39892072-6d8a9418-546d-11e8-935c-201eec73c6d3.gif)
 
 **View products with low inventory**
+
 ![Demo](https://user-images.githubusercontent.com/11021578/39894961-927b3d50-5476-11e8-846b-35e731211b73.gif)
 
 **Add Inventory to a Product**
+
 ![Demo](https://user-images.githubusercontent.com/11021578/39895465-55537102-5478-11e8-81cb-6052861d2128.gif)
 
 **Add a Product**
+
 ![Demo](https://user-images.githubusercontent.com/11021578/39895250-8bda6380-5477-11e8-87d3-64fa04c5b0d0.gif)
 
 
