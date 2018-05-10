@@ -9,7 +9,7 @@ const anotherActivityQuestion = [{
     default: true
 }];
 
-
+// MySQL connection
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -23,23 +23,23 @@ connection.connect(function (err) {
     processActivity();
 });
 
-
+// process request from user
 function processActivity() {
 
     inquirer
         .prompt([{
-                name: "activity",
-                type: "list",
-                message: "What activity would you like to perform?",
-                choices: [
-                    'View Products for Sale',
-                    'View Low Inventory',
-                    'Add to Inventory',
-                    'Add New Product',
-                    'Exit'
-                ],
-                paginated: true
-            }
+            name: "activity",
+            type: "list",
+            message: "What activity would you like to perform?",
+            choices: [
+                'View Products for Sale',
+                'View Low Inventory',
+                'Add to Inventory',
+                'Add New Product',
+                'Exit'
+            ],
+            paginated: true
+        }
 
         ])
         .then(function (answer) {
@@ -60,19 +60,17 @@ function processActivity() {
                 case 'Exit':
                     return connection.end();
                     break;
-
             }
-
         });
 };
 
+// view all products. Uses package cli-table as Table to format the response
 function viewProducts() {
 
     const productArr = new Table({
         head: ['Item', 'Product', 'Department', 'Price', 'Stock Quantity'],
         colWidths: [6, 40, 15, 9, 17],
     });
-
 
     const query = "SELECT * FROM products ORDER BY item_id";
 
@@ -89,6 +87,7 @@ function viewProducts() {
     });
 };
 
+// view product inventory that is below an amount provided by the user
 function viewInventory() {
 
     const lowInventoryQuantity = [{
@@ -98,12 +97,10 @@ function viewInventory() {
         validate: ValidatePositive,
     }];
 
-
     const inventoryArr = new Table({
         head: ['Item', 'Product', 'Stock Quantity'],
         colWidths: [6, 40, 17],
     });
-
 
     const query = "SELECT item_id, product_name, stock_quantity FROM products WHERE stock_quantity < ? ORDER BY item_id";
 
@@ -118,26 +115,29 @@ function viewInventory() {
                         inventoryArr.push([product.item_id, product.product_name, product.stock_quantity])
                     });
                     console.log(inventoryArr.toString());
-                    anotherActivity()
+                    anotherActivity();
                 };
+                console.log(`All products have a stock quantity of at least ${answer.lowInventoryQuantity}`);
+                anotherActivity();
             });
         });
 };
 
+// add invetory to a product. User is prompted for product and quantity to add
 function addInventory() {
 
     const addInventoryItem = [{
-            name: "addInventoryItem",
-            type: "prompt",
-            message: "What item number:",
-            validate: ValidatePositive
-        },
-        {
-            name: "addInventoryQuantity",
-            type: "prompt",
-            message: "How much inventory to add:",
-            validate: ValidatePositive,
-        }
+        name: "addInventoryItem",
+        type: "prompt",
+        message: "What item number:",
+        validate: ValidatePositive
+    },
+    {
+        name: "addInventoryQuantity",
+        type: "prompt",
+        message: "How much inventory to add:",
+        validate: ValidatePositive,
+    }
     ];
 
     inquirer.prompt(addInventoryItem)
@@ -158,30 +158,31 @@ function addInventory() {
 
 };
 
+// add new product. User is prompted for the required data. item_id is auto generated per the database definition
 function addProduct() {
 
     const addProduct = [{
-            name: "addProductName",
-            type: "prompt",
-            message: "Enter Product Name:"
-        },
-        {
-            name: "addProductDept",
-            type: "prompt",
-            message: "Enter Department Name:"
-        },
-        {
-            name: "addProductPrice",
-            type: "prompt",
-            message: "Enter Price:",
-            validate: ValidatePositive,
-        },
-        {
-            name: "addProductQuantity",
-            type: "prompt",
-            message: "Enter Stock Quantity:",
-            validate: ValidatePositive,
-        }
+        name: "addProductName",
+        type: "prompt",
+        message: "Enter Product Name:"
+    },
+    {
+        name: "addProductDept",
+        type: "prompt",
+        message: "Enter Department Name:"
+    },
+    {
+        name: "addProductPrice",
+        type: "prompt",
+        message: "Enter Price:",
+        validate: ValidatePositive,
+    },
+    {
+        name: "addProductQuantity",
+        type: "prompt",
+        message: "Enter Stock Quantity:",
+        validate: ValidatePositive,
+    }
     ];
 
 
@@ -211,6 +212,7 @@ function addProduct() {
 
 };
 
+// prompt the user to continue with the application or exit
 function anotherActivity() {
     inquirer.prompt(anotherActivityQuestion).then(answers => {
 
@@ -223,10 +225,8 @@ function anotherActivity() {
     });
 }
 
-function ValidateNumeric(value) {
-    return !isNaN(value)
-};
 
+// validate input field is numeric and a positive number
 function ValidatePositive(value) {
     if (value > 0 && !isNaN(value)) {
         return true;

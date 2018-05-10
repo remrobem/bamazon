@@ -7,17 +7,14 @@ CREATE DATABASE bamazon;
 USE bamazon;
 
 
-CREATE TABLE products (
- 
+CREATE TABLE products ( 
   item_id INTEGER(10) not null auto_increment,
   product_name VARCHAR(100) NOT NULL UNIQUE,
   department_name VARCHAR(100) NOT NULL,
   price decimal(10,2)  NOT NULL,
   stock_quantity integer(10)  NOT NULL,
-  product_sales decimal(10,2) NOT NULL DEFAULT 0,
-  
-   PRIMARY KEY(item_id)
- 
+  product_sales decimal(10,2) NOT NULL DEFAULT 0,  
+   PRIMARY KEY(item_id) 
 );
 
 

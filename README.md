@@ -83,3 +83,14 @@ There are 3 js files that can be run from a terminal session. Details on executi
     1. Rely to the prompts with the requested department information
     1. A department item number is automatically generated
     1. Department name must be unique
+
+# Technical Information
+
+## Database
+1. MySQL is used as the database
+2. Details for the database, tables and users can be found in the *.sql files
+
+## Packages
+1. cli-table    provides formatting to display list data in a table (https://www.npmjs.com/package/cli-table)
+1. inquirer     provides framework for user prompts (https://www.npmjs.com/package/inquirer)
+1. mysql        provides connection to MySQL database (https://www.npmjs.com/package/node-mysql)
