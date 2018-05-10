@@ -49,7 +49,7 @@ There are 3 js files that can be run from a terminal session. Details on executi
 
 ## bamazonCustomer.js
 
-https://user-images.githubusercontent.com/11021578/39891290-2496ec9a-546b-11e8-9809-16eacc314f58.gif
+https://user-images.githubusercontent.com/11021578/39892072-6d8a9418-546d-11e8-935c-201eec73c6d3.gif
 
 1. run _node bamazonCustomer.js_ from a terminal session in the application directory
 1. A list of products is presented
