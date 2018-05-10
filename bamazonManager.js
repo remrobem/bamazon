@@ -2,13 +2,6 @@ let inquirer = require('inquirer');
 let mysql = require('mysql');
 let Table = require("cli-table");
 
-const anotherActivityQuestion = [{
-    name: "anotherActivity",
-    type: "confirm",
-    message: "Would you like to perform another activity? (hit Enter for Yes)",
-    default: true
-}];
-
 // MySQL connection
 var connection = mysql.createConnection({
     host: "localhost",
@@ -60,7 +53,7 @@ function processActivity() {
                     addProduct();
                     break;
                 case 'Exit':
-                    return connection.end();
+                    connection.end();
                     break;
             }
         });
@@ -111,16 +104,16 @@ function viewInventory() {
 
             connection.query(query, [answer.lowInventoryQuantity], function (err, res) {
                 if (err) throw err;
-
                 if (res.length) {
                     res.forEach(product => {
                         inventoryArr.push([product.item_id, product.product_name, product.stock_quantity])
                     });
                     console.log(inventoryArr.toString());
                     anotherActivity();
+                } else {
+                    console.log(`All products have a stock quantity of at least ${answer.lowInventoryQuantity}`);
+                    anotherActivity();
                 };
-                console.log(`All products have a stock quantity of at least ${answer.lowInventoryQuantity}`);
-                anotherActivity();
             });
         });
 };
@@ -233,6 +226,14 @@ function addProduct() {
 
 // prompt the user to continue with the application or exit
 function anotherActivity() {
+
+    const anotherActivityQuestion = [{
+        name: "anotherActivity",
+        type: "confirm",
+        message: "Would you like to perform another activity? (hit Enter for Yes)",
+        default: true
+    }];
+
     inquirer.prompt(anotherActivityQuestion).then(answers => {
 
         if (answers.anotherActivity) {

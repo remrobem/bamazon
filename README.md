@@ -49,6 +49,8 @@ There are 3 js files that can be run from a terminal session. Details on executi
 
 ## bamazonCustomer.js
 
+![Demo](https://user-images.githubusercontent.com/11021578/39892072-6d8a9418-546d-11e8-935c-201eec73c6d3.gif
+)
 https://user-images.githubusercontent.com/11021578/39892072-6d8a9418-546d-11e8-935c-201eec73c6d3.gif
 
 1. run _node bamazonCustomer.js_ from a terminal session in the application directory
@@ -57,6 +59,7 @@ https://user-images.githubusercontent.com/11021578/39892072-6d8a9418-546d-11e8-9
 1. Once a product is selected, reply to the prompt with the quantity to order
 1. A reply is provided indicating if the order is created or if there is not enough inventory
 1. Reply to the prompt to continue with another order or to exit the application
+
 
 ## bamazonManager.js
 
