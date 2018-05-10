@@ -23,23 +23,25 @@ connection.connect(function (err) {
     processActivity();
 });
 
-
+// process request from user
 function processActivity() {
 
-    inquirer
-        .prompt([{
-                name: "activity",
-                type: "list",
-                message: "What activity would you like to perform?",
-                choices: [
-                    'View Product Sales By Department',
-                    'Create New Department',
-                    'Exit'
-                ],
-                paginated: true
-            }
+    const chooseActivity = [
+        {
+            name: "activity",
+            type: "list",
+            message: "What activity would you like to perform?",
+            choices: [
+                'View Product Sales By Department',
+                'Create New Department',
+                'Exit'
+            ],
+            paginated: true
+        }
+    ];
 
-        ])
+    inquirer
+        .prompt(chooseActivity)
         .then(function (answer) {
             switch (answer.activity) {
 
@@ -101,19 +103,21 @@ function viewSales() {
     });
 };
 
+// add departement to the departments table. User is prompted for department data.
+// department_id is auto generated per the database defintion
 function addDepartment() {
 
     const addProduct = [{
-            name: "addDeptName",
-            type: "prompt",
-            message: "Enter Department Name:"
-        },
-        {
-            name: "addDeptOverhead",
-            type: "prompt",
-            message: "Enter Department Overhead Cost:",
-            validate: ValidatePositive,
-        }
+        name: "addDeptName",
+        type: "prompt",
+        message: "Enter Department Name:"
+    },
+    {
+        name: "addDeptOverhead",
+        type: "prompt",
+        message: "Enter Department Overhead Cost:",
+        validate: ValidatePositive,
+    }
 
     ];
 

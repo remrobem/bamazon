@@ -35,33 +35,34 @@ function placeOrder() {
     }];
     const query = "SELECT item_id as value, CONCAT(item_id, ' : ', product_name) as name FROM products ORDER BY item_id";
 
+    const placeOrder = [
+        {
+            name: "item_id",
+            type: "list",
+            message: "What product would you like to order?",
+            choices: productList,
+            paginated: true
+        },
+        {
+            name: "stock_quantity",
+            type: "input",
+            message: "How many would you like to order?",
+            validate: ValidateNumeric,
+            when: function (answers) {
+                return answers.item_id != 'exit';
+            }
+        }
+    ];
+
     connection.query(query, {}, function (err, res) {
         if (err) throw err;
-
         if (res.length) {
             res.forEach(product => {
                 productList.push(product);
             });
 
             inquirer
-                .prompt([{
-                        name: "item_id",
-                        type: "list",
-                        message: "What product would you like to order?",
-                        choices: productList,
-                        paginated: true
-                    },
-                    {
-                        name: "stock_quantity",
-                        type: "input",
-                        message: "How many would you like to order?",
-                        validate: ValidateNumeric,
-                        when: function (answers) {
-                            return answers.item_id != 'exit';
-                        }
-                    }
-
-                ])
+                .prompt(placeOrder)
                 .then(function (answer) {
                     if (answer.item_id === 'exit') {
                         connection.end();
@@ -116,7 +117,7 @@ function placeOrder() {
 
 }
 
-
+// prompt the user to continue with the application or exit
 function anotherOrder() {
     inquirer.prompt(anotherOrderQuestion).then(answers => {
 
@@ -129,6 +130,7 @@ function anotherOrder() {
     });
 }
 
+// validate input field is numeric
 function ValidateNumeric(value) {
     return !isNaN(value)
 };

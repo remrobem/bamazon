@@ -26,8 +26,8 @@ connection.connect(function (err) {
 // process request from user
 function processActivity() {
 
-    inquirer
-        .prompt([{
+    const chooseActivity = [
+        {
             name: "activity",
             type: "list",
             message: "What activity would you like to perform?",
@@ -39,9 +39,11 @@ function processActivity() {
                 'Exit'
             ],
             paginated: true
-        }
+        }];
 
-        ])
+
+    inquirer
+        .prompt(chooseActivity)
         .then(function (answer) {
             switch (answer.activity) {
 
@@ -123,14 +125,23 @@ function viewInventory() {
         });
 };
 
-// add invetory to a product. User is prompted for product and quantity to add
+// add inventory to a product. 
+//User is presented with a list of products to choode from and is then prompted to get the quantity
 function addInventory() {
+
+    const productList = [{
+        value: 'exit',
+        name: 'exit'
+    }];
+
+    const productQuery = "SELECT item_id as value, CONCAT(item_id, ' : ', product_name) as name FROM products ORDER BY item_id";
 
     const addInventoryItem = [{
         name: "addInventoryItem",
-        type: "prompt",
-        message: "What item number:",
-        validate: ValidatePositive
+        type: "list",
+        message: "What product would you like to add stock to?",
+        choices: productList,
+        paginated: true
     },
     {
         name: "addInventoryQuantity",
@@ -140,22 +151,30 @@ function addInventory() {
     }
     ];
 
-    inquirer.prompt(addInventoryItem)
-        .then(answer => {
-            query = "UPDATE products SET stock_quantity = stock_quantity + ? where item_id = ?";
-            connection.query(query, [answer.addInventoryQuantity, answer.addInventoryItem], function (err, res) {
-                if (err) throw err;
-                // expect one row to be updated
-                if (res.changedRows === 1) {
-                    console.log(`The inventory has been updated`)
-                } else {
-                    console.log(`Something went wrong. Rows updated: ${res.affected_rows}`)
-                }
-                anotherActivity()
+    connection.query(productQuery, {}, function (err, res) {
+        if (err) throw err;
+        if (res.length) {
+            res.forEach(product => {
+                productList.push(product);
             });
-        });
 
-
+            inquirer
+                .prompt(addInventoryItem)
+                .then(answer => {
+                    query = "UPDATE products SET stock_quantity = stock_quantity + ? where item_id = ?";
+                    connection.query(query, [answer.addInventoryQuantity, answer.addInventoryItem], function (err, res) {
+                        if (err) throw err;
+                        // expect one row to be updated
+                        if (res.changedRows === 1) {
+                            console.log(`The inventory has been updated`)
+                        } else {
+                            console.log(`Something went wrong. Rows updated: ${res.affected_rows}`)
+                        }
+                        anotherActivity()
+                    });
+                });
+        }
+    })
 };
 
 // add new product. User is prompted for the required data. item_id is auto generated per the database definition
