@@ -71,9 +71,7 @@ function viewSales() {
     const query = "SELECT dept.department_id as dept_id, dept.department_name as dept_name, dept.over_head_costs as dept_overhead, SUM(prod.product_sales) as sales, SUM(prod.product_sales) - dept.over_head_costs as profit FROM departments as dept LEFT OUTER JOIN products as prod ON(dept.department_name = prod.department_name) GROUP BY dept.department_name ORDER BY dept.department_id ";
 
     connection.query(query, {}, function (err, res) {
-
-        console.log('response');
-        console.log(JSON.stringify(res));
+   
         if (err) throw err;
 
         if (res.length) {
