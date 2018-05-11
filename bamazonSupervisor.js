@@ -23,23 +23,25 @@ connection.connect(function (err) {
     processActivity();
 });
 
-
+// process request from user
 function processActivity() {
 
-    inquirer
-        .prompt([{
-                name: "activity",
-                type: "list",
-                message: "What activity would you like to perform?",
-                choices: [
-                    'View Product Sales By Department',
-                    'Create New Department',
-                    'Exit'
-                ],
-                paginated: true
-            }
+    const chooseActivity = [
+        {
+            name: "activity",
+            type: "list",
+            message: "What activity would you like to perform?",
+            choices: [
+                'View Product Sales By Department',
+                'Create New Department',
+                'Exit'
+            ],
+            paginated: true
+        }
+    ];
 
-        ])
+    inquirer
+        .prompt(chooseActivity)
         .then(function (answer) {
             switch (answer.activity) {
 
@@ -69,9 +71,7 @@ function viewSales() {
     const query = "SELECT dept.department_id as dept_id, dept.department_name as dept_name, dept.over_head_costs as dept_overhead, SUM(prod.product_sales) as sales, SUM(prod.product_sales) - dept.over_head_costs as profit FROM departments as dept LEFT OUTER JOIN products as prod ON(dept.department_name = prod.department_name) GROUP BY dept.department_name ORDER BY dept.department_id ";
 
     connection.query(query, {}, function (err, res) {
-
-        console.log('response');
-        console.log(JSON.stringify(res));
+   
         if (err) throw err;
 
         if (res.length) {
@@ -101,19 +101,21 @@ function viewSales() {
     });
 };
 
+// add departement to the departments table. User is prompted for department data.
+// department_id is auto generated per the database defintion
 function addDepartment() {
 
     const addProduct = [{
-            name: "addDeptName",
-            type: "prompt",
-            message: "Enter Department Name:"
-        },
-        {
-            name: "addDeptOverhead",
-            type: "prompt",
-            message: "Enter Department Overhead Cost:",
-            validate: ValidatePositive,
-        }
+        name: "addDeptName",
+        type: "prompt",
+        message: "Enter Department Name:"
+    },
+    {
+        name: "addDeptOverhead",
+        type: "prompt",
+        message: "Enter Department Overhead Cost:",
+        validate: ValidatePositive,
+    }
 
     ];
 
